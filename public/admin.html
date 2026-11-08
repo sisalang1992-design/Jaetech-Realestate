@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>관리자</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="ad">
+<h1 class="pt" style="margin-bottom:20px">매물 관리</h1>
+<form id="login" class="box" style="max-width:380px;display:grid;gap:14px">
+  <label>이메일<input id="em" type="email" autocomplete="username" required></label>
+  <label>비밀번호<input id="pw" type="password" autocomplete="current-password" required></label>
+  <button class="btn" type="submit">로그인</button><p class="msg err" id="lmsg"></p></form>
+<div id="panel" hidden>
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><a class="btn line sm" href="index.html" target="_blank">사이트 보기</a><button class="btn line sm" id="out" type="button">로그아웃</button></div>
+  <form id="f" class="box" style="margin-top:16px">
+    <h2 id="ft2" style="margin:0 0 14px;font-size:20px">새 매물 등록</h2>
+    <div class="fg">
+      <p class="w" style="margin:0;font-weight:700">필수 항목 (공인중개사법 인터넷 광고 명시사항)</p>
+      <label>사이트 분류<select id="category"><option value="office">사무실</option><option value="store">상가</option><option value="building">건물 매매</option></select></label>
+      <label>거래형태<select id="deal" required><option value="월세">임대차 · 월세</option><option value="전세">임대차 · 전세</option><option value="매매">매매</option></select></label>
+      <label class="w">제목<input id="title" type="text" required></label>
+      <label class="w">소재지 (건축물대장 기준, 읍·면·동까지)<input id="area" type="text" required placeholder="예: 서울 마포구 서교동"></label>
+      <div class="w fg3"><label>보증금 (만원)<input id="deposit" type="number" min="0" inputmode="numeric"></label>
+      <label>월세 (만원)<input id="monthly" type="number" min="0" inputmode="numeric"></label>
+      <label>관리비 (만원, 없으면 0)<input id="maint" type="number" min="0" inputmode="numeric" required></label></div>
+      <label>매매가 (만원, 매매일 때)<input id="sale" type="number" min="0" inputmode="numeric"></label>
+      <label>중개대상물 종류 (건축법 용도)<select id="ptype" required><option value="">선택</option><option>단독주택</option><option>공동주택</option><option>제1종 근린생활시설</option><option>제2종 근린생활시설</option><option>문화 및 집회시설</option><option>종교시설</option><option>판매시설</option><option>운수시설</option><option>의료시설</option><option>교육연구시설</option><option>노유자시설</option><option>수련시설</option><option>운동시설</option><option>업무시설</option><option>숙박시설</option><option>위락시설</option><option>공장</option><option>창고시설</option><option>위험물 저장 및 처리 시설</option><option>자동차 관련 시설</option><option>동물 및 식물 관련 시설</option><option>자원순환 관련 시설</option><option>교정 및 군사 시설</option><option>방송통신시설</option><option>발전시설</option><option>묘지 관련 시설</option><option>관광 휴게시설</option><option>장례시설</option><option>야영장 시설</option><option>미등기건물</option><option>그 밖의 토지의 정착물</option></select></label>
+      <label>해당 층<input id="floor" type="text" required placeholder="예: 2층"></label>
+      <label>총 층수 (건축물대장 기준)<input id="total" type="text" required placeholder="예: 4층"></label>
+      <label>전용면적 (㎡)<input id="m2" type="number" min="0" step="0.01" inputmode="decimal" required></label>
+      <label>참고: 평 (자동 계산, 광고에는 ㎡가 기준)<input id="size" type="number" min="0" step="0.01" inputmode="decimal"></label>
+      <label>사용승인일 (건축물대장 기준)<input id="appr" type="date" required></label>
+      <label>입주가능일<input id="movein" type="text" required list="dl-move" placeholder="즉시입주 / 2026-12-15 / 2026년 12월 초순"></label>
+      <label>주차 가능 대수 (총, 불가능하면 0)<input id="parking" type="number" min="0" inputmode="numeric" required></label>
+      <label>욕실·화장실 수<input id="bath" type="number" min="0" inputmode="numeric" required></label>
+      <label>방 수 (주택·준주택 아니면 비워도 됨)<input id="room" type="number" min="0" inputmode="numeric"></label>
+      <label>방향 (주출입구 기준)<select id="ent" required><option value="">선택</option><option>동향</option><option>서향</option><option>남향</option><option>북향</option><option>북동향</option><option>남동향</option><option>남서향</option><option>북서향</option></select></label>
+      <label class="chk w"><input id="viol" type="checkbox">건축물대장에 위반사항이 기재되어 있음 (위반건축물 표시)</label>
+      <p class="w" style="margin:8px 0 0;font-weight:700">선택 항목</p>
+      <label>권리금<input id="key" type="text" placeholder="없음 / 3,000만원"></label>
+      <label>엘리베이터<input id="elev" list="dl-elev" type="text"></label>
+      <label>냉/난방<input id="heat" list="dl-heat" type="text"></label>
+      <label>화장실 형태<input id="rest" list="dl-rest" type="text"></label>
+      <label>주용도<input id="muse" type="text"></label>
+      <label class="w">상세 설명<textarea id="desc"></textarea></label>
+      <label class="w">사진 (여러 장 선택 가능, 자동으로 용량이 줄어듭니다)<input id="files" type="file" accept="image/*" multiple style="height:auto;padding:10px"></label>
+      <div class="w"><div class="pp" id="pp"></div></div>
+      <label class="chk"><input id="feat" type="checkbox">추천 매물</label>
+      <label class="chk"><input id="act" type="checkbox" checked>사이트에 공개</label>
+    </div>
+    <datalist id="dl-move"><option value="즉시입주"></datalist><datalist id="dl-elev"><option value="있음"><option value="없음"></datalist><datalist id="dl-heat"><option value="개별난방"><option value="중앙난방"><option value="개별냉난방"><option value="중앙냉난방"></datalist><datalist id="dl-rest"><option value="내부 남녀공용"><option value="내부 남녀분리"><option value="외부 남녀공용"><option value="외부 남녀분리"></datalist>
+    <p class="msg" id="msg" role="status"></p>
+    <div style="display:flex;gap:10px"><button class="btn" type="submit" id="save">저장</button><button class="btn line" type="button" id="reset">새로 입력</button></div>
+  </form>
+  <h2 style="font-size:20px;margin:32px 0 4px">등록된 매물 <span id="cnt"></span></h2><div id="list"></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script><script src="app.js"></script>
+<script>
+let photos = [], editId = null, rows = [];
+const show = on => { $("login").hidden = on; $("panel").hidden = !on; };
+const say = (t, bad) => { $("msg").textContent = t; $("msg").className = "msg" + (bad ? " err" : ""); };
+const num = v => v === "" ? null : Number(v);
+db.auth.getSession().then(({ data }) => { show(!!data.session); if (data.session) load(); });
+$("login").onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await db.auth.signInWithPassword({ email: $("em").value.trim(), password: $("pw").value });
+  if (error) { $("lmsg").textContent = "로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요."; return; }
+  show(true); load();
+};
+$("out").onclick = async () => { await db.auth.signOut(); show(false); };
+function shrink(file, max, q) {
+  return new Promise((ok, no) => {
+    const img = new Image();
+    img.onload = () => {
+      const r = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      c.toBlob(b => {
+        if (b && b.type === "image/webp") return ok({ b, ext: "webp" });
+        c.toBlob(j => j ? ok({ b: j, ext: "jpg" }) : no(new Error("변환 실패")), "image/jpeg", 0.8);
+      }, "image/webp", q);
+    };
+    img.onerror = () => no(new Error("이미지를 읽을 수 없습니다"));
+    img.src = URL.createObjectURL(file);
+  });
+}
+$("files").onchange = async e => {
+  for (const f of e.target.files) {
+    try {
+      say("사진 올리는 중…");
+      const base = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const m = await shrink(f, 1280, 0.78), t = await shrink(f, 480, 0.72);
+      const up = (name, x) => db.storage.from("listing-photos").upload(name, x.b, { contentType: x.b.type, cacheControl: "31536000" });
+      const r1 = await up(`${base}_m.${m.ext}`, m); if (r1.error) throw r1.error;
+      const r2 = await up(`${base}_t.${t.ext}`, t); if (r2.error) throw r2.error;
+      photos.push(db.storage.from("listing-photos").getPublicUrl(`${base}_m.${m.ext}`).data.publicUrl);
+      drawPhotos();
+    } catch (err) { say("사진 업로드 실패: " + (err.message || err), true); }
+  }
+  if (!$("msg").classList.contains("err")) say("사진이 추가되었습니다. 저장을 눌러야 반영됩니다.");
+  e.target.value = "";
+};
+function drawPhotos() {
+  $("pp").innerHTML = photos.map((u, i) => `<div><img src="${esc(thumb(u))}" alt="사진 ${i + 1}"><button type="button" data-i="${i}" aria-label="사진 삭제">×</button></div>`).join("");
+}
+$("pp").onclick = e => { const i = e.target.dataset.i; if (i !== undefined) { photos.splice(+i, 1); drawPhotos(); } };
+function clearForm() {
+  editId = null; photos = []; $("f").reset(); $("act").checked = true; drawPhotos(); say("");
+  $("ft2").textContent = "새 매물 등록";
+}
+$("reset").onclick = clearForm;
+$("m2").oninput = () => { const v = parseFloat($("m2").value); $("size").value = v ? (v * 0.3025).toFixed(2) : ""; };
+$("f").onsubmit = async e => {
+  e.preventDefault();
+  const row = { category: $("category").value, deal_type: $("deal").value, title: $("title").value.trim(), area_name: $("area").value.trim(),
+    deposit: num($("deposit").value), monthly: num($("monthly").value), sale_price: num($("sale").value),
+    maintenance_fee: num($("maint").value), key_money: $("key").value.trim() || null, floor: $("floor").value.trim(), floor_total: $("total").value.trim(),
+    area_m2: num($("m2").value), size_pyeong: num($("size").value), parking: $("parking").value.trim(), elevator: $("elev").value.trim() || null,
+    heating: $("heat").value.trim() || null, move_in: $("movein").value.trim(), property_type: $("ptype").value, approval_date: $("appr").value || null,
+    main_use: $("muse").value.trim() || null, restroom: $("rest").value.trim() || null, entrance_dir: $("ent").value,
+    room_count: num($("room").value), bath_count: num($("bath").value), is_violation: $("viol").checked,
+    description: $("desc").value.trim() || null, photos, is_featured: $("feat").checked, is_active: $("act").checked };
+  const d = row.deal_type;
+  if (d === "매매" ? row.sale_price == null : d === "전세" ? row.deposit == null : (row.deposit == null || !row.monthly)) {
+    say(d === "매매" ? "매매가를 입력하세요." : d === "전세" ? "보증금을 입력하세요." : "월세는 보증금과 월세(0보다 큰 금액)를 모두 입력하세요.", true); return;
+  }
+  if (d !== "월세") row.monthly = null;
+  if (d === "매매") row.deposit = null; else row.sale_price = null;
+  if (!/^(즉시입주|\d{4}-\d{2}-\d{2}|\d{4}년 ?\d{1,2}월 ?(초순|중순|하순))$/.test(row.move_in)) {
+    say("입주가능일은 '즉시입주', '2026-12-15', '2026년 12월 초순(중순·하순)' 중 한 가지 형식으로 입력하세요.", true); return;
+  }
+  $("save").disabled = true;
+  const { error } = editId ? await db.from("listings").update(row).eq("id", editId) : await db.from("listings").insert(row);
+  $("save").disabled = false;
+  if (error) { say("저장 실패: " + error.message, true); return; }
+  clearForm(); say("저장되었습니다."); load();
+};
+async function load() {
+  const { data, error } = await db.from("listings").select("*").order("created_at", { ascending: false });
+  if (error) { $("list").innerHTML = `<p class="msg err">목록을 불러오지 못했습니다: ${esc(error.message)}</p>`; return; }
+  rows = data; $("cnt").textContent = `(${data.length}개)`;
+  $("list").innerHTML = data.length ? data.map(l => `<div class="row"><div><b>${esc(l.title)}</b><br><small>${CAT[l.category]} · ${esc(priceText(l))}${l.is_active ? "" : " · 비공개"}${l.is_featured ? " · 추천" : ""}</small></div>
+    <div style="display:flex;gap:6px"><button class="btn line sm" data-a="edit" data-id="${l.id}">수정</button><button class="btn line sm" data-a="tog" data-id="${l.id}">${l.is_active ? "거래완료·숨김" : "다시 공개"}</button><button class="btn del sm" data-a="del" data-id="${l.id}">삭제</button></div></div>`).join("")
+    : '<p class="empty">아직 등록된 매물이 없습니다. 위 양식으로 첫 매물을 등록하세요.</p>';
+}
+$("list").onclick = async e => {
+  const a = e.target.dataset.a, id = +e.target.dataset.id, l = rows.find(r => r.id === id);
+  if (!a || !l) return;
+  if (a === "edit") {
+    editId = id; photos = [...(l.photos || [])];
+    $("category").value = l.category; $("title").value = l.title; $("area").value = l.area_name || "";
+    $("deposit").value = l.deposit ?? ""; $("monthly").value = l.monthly ?? ""; $("sale").value = l.sale_price ?? "";
+    $("size").value = l.size_pyeong ?? ""; $("floor").value = l.floor || ""; $("desc").value = l.description || "";
+    $("maint").value = l.maintenance_fee ?? ""; $("key").value = l.key_money || ""; $("total").value = l.floor_total || ""; $("m2").value = l.area_m2 ?? "";
+    $("parking").value = l.parking || ""; $("elev").value = l.elevator || ""; $("heat").value = l.heating || ""; $("movein").value = l.move_in || "";
+    $("ptype").value = l.property_type || ""; $("appr").value = l.approval_date || ""; $("muse").value = l.main_use || ""; $("rest").value = l.restroom || ""; $("ent").value = l.entrance_dir || "";
+    $("deal").value = dealOf(l); $("room").value = l.room_count ?? ""; $("bath").value = l.bath_count ?? ""; $("viol").checked = !!l.is_violation;
+    $("feat").checked = l.is_featured; $("act").checked = l.is_active; drawPhotos();
+    $("ft2").textContent = "매물 수정"; say(""); $("f").scrollIntoView({ behavior: "smooth" });
+  } else if (a === "tog") {
+    await db.from("listings").update({ is_active: !l.is_active }).eq("id", id); load();
+  } else if (a === "del" && confirm(`"${l.title}" 매물을 삭제할까요? 되돌릴 수 없습니다.`)) {
+    await db.from("listings").delete().eq("id", id); load();
+  }
+};
+</script></body></html>

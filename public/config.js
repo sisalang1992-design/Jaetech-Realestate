@@ -1,0 +1,14 @@
+window.SITE = {
+  "name": "재테크부동산",
+  "siteUrl": "https://example.com",
+  "phone": "010-0000-0000",
+  "supabaseUrl": "https://oghalcdvkxjhljzowkdf.supabase.co",
+  "supabaseKey": "sb_publishable_5b-2yzzGfCYPWQhGaFzc-Q_eZARumWP",
+  "info": {
+    "ceo": "대표자명",
+    "bizNo": "사업자등록번호",
+    "regNo": "중개사무소 등록번호",
+    "address": "사무소 주소",
+    "email": "이메일"
+  }
+};
