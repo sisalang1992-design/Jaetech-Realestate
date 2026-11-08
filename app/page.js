@@ -34,7 +34,7 @@ export default async function Home() {
         {[["office", <IconOffice />], ["store", <IconStore />], ["building", <IconBuilding />]].map(([c, ic]) => (
           <a key={c} className="qc" href={`/${c}`}><div><b>{CAT[c]}</b><span>{cnt[c] ? `${cnt[c]}건 · ` : ""}전체 매물 보기 →</span></div>{ic}</a>
         ))}
-        <a className="qc req" href="/request"><div><b>매물의뢰<br />및 접수</b><span>내 매물 내놓기 →</span></div><IconRequest /></a>
+        <a className="qc req" href="/request"><div><b>매물의뢰<br />및 접수</b><span>내놓기·구하기 →</span></div><IconRequest /></a>
       </div></section>
       <main className="in">
         {latest.length > 0 && <Sec t="최신 매물" s="새로 등록된 매물을 가장 먼저 만나보세요">

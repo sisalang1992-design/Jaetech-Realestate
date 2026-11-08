@@ -18,7 +18,7 @@ export async function POST(req) {
   if (error) return bad(500, "저장 실패");
   const key = process.env.RESEND_API_KEY, to = process.env.NOTIFY_EMAIL;
   if (key && to) {
-    const kind = message.startsWith("[매물의뢰]") ? "매물의뢰" : "상담문의";
+    const m = /^\[(매물내놓기|매물구하기|매물의뢰)\]/.exec(message), kind = m ? m[1] : "상담문의";
     const kst = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
     try {
       await fetch("https://api.resend.com/emails", {

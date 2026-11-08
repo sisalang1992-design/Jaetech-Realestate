@@ -172,7 +172,7 @@ async function loadInq() {
   const { data, error } = await db.from("inquiries").select("*").order("created_at", { ascending: false }).limit(200);
   if (error) { $("inq").innerHTML = `<p class="msg err">상담 문의를 불러오지 못했습니다: ${esc(error.message)}</p>`; return; }
   inqs = data; $("icnt").textContent = `(${data.length}건 · 새 문의 ${data.filter(x => !x.is_read).length}건)`;
-  $("inq").innerHTML = data.length ? data.map(q => `<div class="row"><div><b>${q.is_read ? "" : "● "}${esc(q.name)}</b> · <a href="tel:${esc(q.phone)}">${esc(q.phone)}</a>${q.email ? " · " + esc(q.email) : ""}<br><small>${new Date(q.created_at).toLocaleString("ko-KR")}</small><br>${esc(q.message || "")}</div>
+  $("inq").innerHTML = data.length ? data.map(q => `<div class="row"><div><b>${q.is_read ? "" : "● "}${esc(q.name)}</b> · <a href="tel:${esc(q.phone)}">${esc(q.phone)}</a>${q.email ? " · " + esc(q.email) : ""}<br><small>${new Date(q.created_at).toLocaleString("ko-KR")}</small><br><span style="white-space:pre-line">${esc(q.message || "")}</span></div>
     <div style="display:flex;gap:6px"><button class="btn line sm" data-q="read" data-id="${q.id}">${q.is_read ? "안읽음으로" : "읽음 처리"}</button><button class="btn del sm" data-q="del" data-id="${q.id}">삭제</button></div></div>`).join("") : '<p class="empty">아직 상담 문의가 없습니다.</p>';
 }
 $("inq").onclick = async e => {
