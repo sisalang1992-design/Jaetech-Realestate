@@ -53,7 +53,6 @@
     <div style="display:flex;gap:10px"><button class="btn" type="submit" id="save">저장</button><button class="btn line" type="button" id="reset">새로 입력</button></div>
   </form>
   <h2 style="font-size:20px;margin:32px 0 4px">등록된 매물 <span id="cnt"></span></h2><div id="list"></div>
-  <h2 style="font-size:20px;margin:32px 0 4px">상담 문의 <span id="icnt"></span></h2><div id="inq"></div>
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script><script src="app.js"></script>
@@ -139,7 +138,6 @@ $("f").onsubmit = async e => {
   clearForm(); say("저장되었습니다."); load();
 };
 async function load() {
-  loadInq();
   const { data, error } = await db.from("listings").select("*").order("created_at", { ascending: false });
   if (error) { $("list").innerHTML = `<p class="msg err">목록을 불러오지 못했습니다: ${esc(error.message)}</p>`; return; }
   rows = data; $("cnt").textContent = `(${data.length}개)`;
@@ -166,20 +164,5 @@ $("list").onclick = async e => {
   } else if (a === "del" && confirm(`"${l.title}" 매물을 삭제할까요? 되돌릴 수 없습니다.`)) {
     await db.from("listings").delete().eq("id", id); load();
   }
-};
-let inqs = [];
-async function loadInq() {
-  const { data, error } = await db.from("inquiries").select("*").order("created_at", { ascending: false }).limit(200);
-  if (error) { $("inq").innerHTML = `<p class="msg err">상담 문의를 불러오지 못했습니다: ${esc(error.message)}</p>`; return; }
-  inqs = data; $("icnt").textContent = `(${data.length}건 · 새 문의 ${data.filter(x => !x.is_read).length}건)`;
-  $("inq").innerHTML = data.length ? data.map(q => `<div class="row"><div><b>${q.is_read ? "" : "● "}${esc(q.name)}</b> · <a href="tel:${esc(q.phone)}">${esc(q.phone)}</a>${q.email ? " · " + esc(q.email) : ""}<br><small>${new Date(q.created_at).toLocaleString("ko-KR")}</small><br>${esc(q.message || "")}</div>
-    <div style="display:flex;gap:6px"><button class="btn line sm" data-q="read" data-id="${q.id}">${q.is_read ? "안읽음으로" : "읽음 처리"}</button><button class="btn del sm" data-q="del" data-id="${q.id}">삭제</button></div></div>`).join("") : '<p class="empty">아직 상담 문의가 없습니다.</p>';
-}
-$("inq").onclick = async e => {
-  const a = e.target.dataset.q, id = +e.target.dataset.id, q = inqs.find(x => x.id === id);
-  if (!a || !q) return;
-  if (a === "read") await db.from("inquiries").update({ is_read: !q.is_read }).eq("id", id);
-  else if (a === "del" && confirm("이 상담 내역을 삭제할까요?")) await db.from("inquiries").delete().eq("id", id);
-  loadInq();
 };
 </script></body></html>
