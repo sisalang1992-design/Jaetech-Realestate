@@ -41,7 +41,7 @@ export default function RequestForm({ initial = "sell" }) {
       name: v("name"), phone: v("phone"), email: "", message, consent: true }) }).catch(() => ({ ok: false }));
     if (!res.ok) { setSt({ busy: false, msg: "접수에 실패했습니다. 전화로 문의해 주세요.", err: true }); return; }
     try { localStorage.setItem("consultAt", String(Date.now())); } catch (x) {}
-    form.reset(); setSt({ busy: false, msg: "접수되었습니다. 확인 후 연락드리겠습니다.", err: false });
+    form.reset(); setSt({ busy: false, msg: "✓ 접수되었습니다. 확인 후 연락드리겠습니다.", err: false });
   }
   return (
     <>

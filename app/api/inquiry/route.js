@@ -17,16 +17,19 @@ export async function POST(req) {
   const { error } = await db.from("inquiries").insert({ name, phone, email: email || null, message: message || null, consent: true });
   if (error) return bad(500, "저장 실패");
   const key = process.env.RESEND_API_KEY, to = process.env.NOTIFY_EMAIL;
+  let mail = "skipped";
   if (key && to) {
     const m = /^\[(매물내놓기|매물구하기|매물의뢰)\]/.exec(message), kind = m ? m[1] : "상담문의";
     const kst = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
     try {
-      await fetch("https://api.resend.com/emails", {
+      const r = await fetch("https://api.resend.com/emails", {
         method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({ from: process.env.NOTIFY_FROM || "onboarding@resend.dev", to: [to], subject: `[${site.name}] 새 ${kind} - ${name}`,
           text: `이름: ${name}\n전화: ${phone}\n이메일: ${email || "-"}\n접수: ${kst}\n\n${message || "(내용 없음)"}\n\n관리자 페이지에서도 확인할 수 있습니다.` }),
       });
-    } catch (x) {}
-  }
-  return NextResponse.json({ ok: true });
+      mail = r.ok ? "sent" : "failed " + r.status;
+      if (!r.ok) console.error("Resend 오류", r.status, await r.text());
+    } catch (x) { mail = "failed"; console.error("Resend 호출 실패", x); }
+  } else console.error("이메일 건너뜀: RESEND_API_KEY 또는 NOTIFY_EMAIL 환경 변수가 없습니다.");
+  return NextResponse.json({ ok: true, mail });
 }
