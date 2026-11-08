@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
         <header className="hd"><div className="in">
           <a className="logo" href="/">{site.name}</a>
-          <nav className="nav"><a href="/office">사무실</a><a href="/store">상가</a><a href="/building">건물 매매</a><a href="/#consult">상담문의</a></nav>
+          <nav className="nav"><a href="/office">사무실</a><a href="/store">상가</a><a href="/building">건물 매매</a><a href="/request">매물의뢰</a><a href="/#consult">상담문의</a></nav>
           <a className="btn" href={tel}>상담 {site.phone}</a>
         </div></header>
         {children}

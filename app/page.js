@@ -3,6 +3,7 @@ import DealTabs from "../components/DealTabs";
 import ConsultForm from "../components/ConsultForm";
 import { CAT, dealOf } from "../lib/fmt";
 import { db, COLS } from "../lib/db";
+import { IconOffice, IconStore, IconBuilding, IconRequest } from "../components/Icons";
 import site from "../site.json";
 export const revalidate = 60;
 const Sec = ({ t, s, children }) => <section className="sec2"><div className="sh"><h2>{t}</h2>{s && <p>{s}</p>}</div>{children}</section>;
@@ -15,6 +16,7 @@ export default async function Home() {
     const { count } = await db.from("listings").select("id", { count: "exact", head: true }).eq("category", c).eq("is_active", true);
     return [c, count || 0];
   }));
+  const cnt = Object.fromEntries(counts);
   const i = site.info, hero = site.heroImage ? { backgroundImage: `linear-gradient(rgba(15,22,32,.55),rgba(15,22,32,.65)), url(${site.heroImage})` } : undefined;
   return (
     <>
@@ -28,14 +30,18 @@ export default async function Home() {
           <button type="submit">검색</button>
         </form>
       </div></section>
+      <section className="quick"><div className="in">
+        {[["office", <IconOffice />], ["store", <IconStore />], ["building", <IconBuilding />]].map(([c, ic]) => (
+          <a key={c} className="qc" href={`/${c}`}><div><b>{CAT[c]}</b><span>{cnt[c] ? `${cnt[c]}건 · ` : ""}전체 매물 보기 →</span></div>{ic}</a>
+        ))}
+        <a className="qc req" href="/request"><div><b>매물의뢰<br />및 접수</b><span>내 매물 내놓기 →</span></div><IconRequest /></a>
+      </div></section>
       <main className="in">
         {latest.length > 0 && <Sec t="최신 매물" s="새로 등록된 매물을 가장 먼저 만나보세요">
           <div className="grid">{latest.map(l => <Card key={l.id} l={l} />)}</div>
           <div className="mid"><a className="btn" href="/all">전체 매물 보기 →</a></div></Sec>}
         {featured.length > 0 && <Sec t="추천 매물" s="전문가가 엄선한 매물"><div className="grid">{featured.map(l => <Card key={l.id} l={l} />)}</div></Sec>}
         {groups.length > 0 && <Sec t="거래 유형별 매물" s="매매, 전세, 월세 중 원하는 조건으로 찾아보세요"><DealTabs groups={groups} /></Sec>}
-        <Sec t="매물 종류" s="원하시는 유형의 매물을 찾아보세요">
-          <div className="kinds">{counts.map(([c, n]) => <a key={c} href={`/${c}`}>{CAT[c]}<small>{n}건</small></a>)}</div></Sec>
       </main>
       <section className="cs" id="consult"><div className="in">
         <div>
