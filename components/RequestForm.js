@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { db } from "../lib/db";
 export default function RequestForm() {
   const [st, setSt] = useState({ busy: false, msg: "", err: false });
   async function submit(e) {
@@ -11,8 +10,9 @@ export default function RequestForm() {
     try { if (Date.now() - Number(localStorage.getItem("consultAt") || 0) < 60000) { setSt({ busy: false, msg: "잠시 후 다시 시도해 주세요.", err: true }); return; } } catch (x) {}
     setSt({ busy: true, msg: "", err: false });
     const message = `[매물의뢰] 종류: ${v("kind")} / 거래형태: ${v("deal")} / 소재지: ${v("addr")}` + (v("note") ? `\n${v("note")}` : "");
-    const { error } = await db.from("inquiries").insert({ name: v("name"), phone: v("phone"), email: null, message: message.slice(0, 2000), consent: true });
-    if (error) { setSt({ busy: false, msg: "접수에 실패했습니다. 전화로 문의해 주세요.", err: true }); return; }
+    const res = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+      name: v("name"), phone: v("phone"), email: "", message: message.slice(0, 2000), consent: true }) }).catch(() => ({ ok: false }));
+    if (!res.ok) { setSt({ busy: false, msg: "접수에 실패했습니다. 전화로 문의해 주세요.", err: true }); return; }
     try { localStorage.setItem("consultAt", String(Date.now())); } catch (x) {}
     form.reset(); setSt({ busy: false, msg: "접수되었습니다. 확인 후 연락드리겠습니다.", err: false });
   }
