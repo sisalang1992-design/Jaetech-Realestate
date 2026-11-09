@@ -3,7 +3,7 @@ import DealTabs from "../components/DealTabs";
 import ConsultForm from "../components/ConsultForm";
 import { CAT, dealOf } from "../lib/fmt";
 import { db, COLS } from "../lib/db";
-import { IconOffice, IconStore, IconBuilding, IconRequest } from "../components/Icons";
+import { IconOffice, IconStore, IconBuilding, IconRequest, MailIc, PhoneIc, PinIc } from "../components/Icons";
 import site from "../site.json";
 export const revalidate = 60;
 const Sec = ({ t, s, children }) => <section className="sec2"><div className="sh"><h2>{t}</h2>{s && <p>{s}</p>}</div>{children}</section>;
@@ -48,9 +48,9 @@ export default async function Home() {
           <span className="ey">맞춤 상담</span><h2>무료 상담 신청</h2>
           <p>희망 지역, 예산, 일정만 남겨주시면 담당자가 조건에 맞는 매물을 확인해 연락드립니다.</p>
           <p>불필요한 항목은 줄이고, 상담에 필요한 정보만 간단히 받습니다.</p>
-          <div className="cx"><span className="ic" aria-hidden="true">✉</span><div><small>이메일</small>{i.email}</div></div>
-          <div className="cx"><span className="ic" aria-hidden="true">☎</span><div><small>전화</small>{site.phone}</div></div>
-          <div className="cx"><span className="ic" aria-hidden="true">⌖</span><div><small>주소</small>{i.address}</div></div>
+          <div className="cx"><span className="ic" aria-hidden="true"><MailIc /></span><div><small>이메일</small>{i.email}</div></div>
+          <div className="cx"><span className="ic" aria-hidden="true"><PhoneIc /></span><div><small>전화</small>{site.phone}</div></div>
+          <div className="cx"><span className="ic" aria-hidden="true"><PinIc /></span><div><small>주소</small>{i.address}</div></div>
         </div>
         <ConsultForm />
       </div></section>
