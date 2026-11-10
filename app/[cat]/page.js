@@ -5,7 +5,7 @@ import { CAT } from "../../lib/fmt";
 import site from "../../site.json";
 export const dynamic = "force-dynamic";
 export const dynamicParams = false;
-const NAME = { ...CAT, all: "전체" }, DEALS = ["매매", "전세", "월세"], PER = 12;
+const NAME = { ...CAT, all: "전체" }, TABS = ["all", "office", "store", "building"], DEALS = ["매매", "전세", "월세"], PER = 12;
 export function generateStaticParams() { return Object.keys(NAME).map(cat => ({ cat })); }
 export function generateMetadata({ params, searchParams }) {
   const c = params.cat;
@@ -21,13 +21,16 @@ export default async function List({ params, searchParams }) {
   if (deal) r = r.eq("deal_type", deal);
   if (q) r = r.or(`title.ilike.%${q}%,area_name.ilike.%${q}%`);
   const { data, count } = await r.order("is_featured", { ascending: false }).order("created_at", { ascending: false }).range((page - 1) * PER, page * PER - 1);
-  const last = Math.ceil((count || 0) / PER);
+  const total = count || 0, last = Math.ceil(total / PER);
   const u = n => `/${cat}?page=${n}${q ? "&q=" + encodeURIComponent(q) : ""}${deal ? "&deal=" + encodeURIComponent(deal) : ""}`;
   return (
-    <main className="in" style={{ paddingTop: 32 }}>
-      <h1 className="pt">{NAME[cat]} 매물</h1>
+    <main className="in" style={{ paddingTop: 36 }}>
+      <div className="lh"><h1 className="pt">{NAME[cat]} 매물</h1><p>{q || deal ? "검색 결과 " : "등록된 매물 "}{total}건</p></div>
+      <nav className="ctabs" aria-label="매물 종류">
+        {TABS.map(k => <a key={k} href={`/${k}`} className={k === cat ? "on" : ""} aria-current={k === cat ? "page" : undefined}>{NAME[k]}</a>)}
+      </nav>
       <form className="fb" action={`/${cat}`}>
-        <label>제목·지역 검색<input name="q" type="text" defaultValue={q} /></label>
+        <label>제목·지역 검색<input name="q" type="text" defaultValue={q} placeholder="예: 역세권, 코너" /></label>
         <label>거래형태<select name="deal" defaultValue={deal}><option value="">전체</option>{DEALS.map(d => <option key={d}>{d}</option>)}</select></label>
         <button className="btn" type="submit" style={{ height: 46 }}>검색</button>
       </form>
