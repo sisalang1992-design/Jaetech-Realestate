@@ -1,7 +1,6 @@
 import Card from "../components/Card";
 import DealTabs from "../components/DealTabs";
-import ConsultForm from "../components/ConsultForm";
-import { CAT, dealOf } from "../lib/fmt";
+import { CAT, dealOf, KAKAO } from "../lib/fmt";
 import { db, COLS } from "../lib/db";
 import { IconOffice, IconStore, IconBuilding, IconRequest, MailIc, PhoneIc, PinIc } from "../components/Icons";
 import site from "../site.json";
@@ -16,7 +15,7 @@ export default async function Home() {
     const { count } = await db.from("listings").select("id", { count: "exact", head: true }).eq("category", c).eq("is_active", true);
     return [c, count || 0];
   }));
-  const cnt = Object.fromEntries(counts);
+  const cnt = Object.fromEntries(counts), tel = "tel:" + site.phone.replace(/[^0-9+]/g, "");
   const i = site.info, hero = site.heroImage ? { backgroundImage: `linear-gradient(rgba(15,22,32,.55),rgba(15,22,32,.65)), url(${site.heroImage})` } : undefined;
   return (
     <>
@@ -45,14 +44,17 @@ export default async function Home() {
       </main>
       <section className="cs" id="consult"><div className="in">
         <div>
-          <span className="ey">맞춤 상담</span><h2>무료 상담 신청</h2>
-          <p>희망 지역, 예산, 일정만 남겨주시면 담당자가 조건에 맞는 매물을 확인해 연락드립니다.</p>
-          <p>불필요한 항목은 줄이고, 상담에 필요한 정보만 간단히 받습니다.</p>
-          <div className="cx"><span className="ic" aria-hidden="true"><MailIc /></span><div><small>이메일</small>{i.email}</div></div>
+          <span className="ey">빠른 상담</span><h2>편하게 문의하세요</h2>
+          <p>카카오톡 오픈채팅으로 원하시는 지역과 조건을 남겨 주시면 담당자가 확인 후 답변드립니다.</p>
+          <p>전화로 바로 문의하셔도 됩니다.</p>
           <div className="cx"><span className="ic" aria-hidden="true"><PhoneIc /></span><div><small>전화</small>{site.phone}</div></div>
           <div className="cx"><span className="ic" aria-hidden="true"><PinIc /></span><div><small>주소</small>{i.address}</div></div>
         </div>
-        <ConsultForm />
+        <div className="qa">
+          <a className="kk" href={KAKAO} target="_blank" rel="noopener noreferrer"><b>카카오톡 오픈채팅 상담</b><span>대화로 편하게 바로 문의하세요</span></a>
+          <a className="tl" href={tel}><b>전화 상담</b><span>{site.phone}</span></a>
+          <a className="tl" href="/request"><b>매물 내놓기 · 구하기 접수</b><span>조건을 남겨 두시면 확인 후 연락드립니다</span></a>
+        </div>
       </div></section>
     </>
   );

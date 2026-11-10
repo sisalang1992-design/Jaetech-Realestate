@@ -1,4 +1,5 @@
 import site from "../site.json";
+import { KAKAO } from "../lib/fmt";
 export const metadata = {
   metadataBase: new URL(site.siteUrl),
   title: { default: `${site.name} | 사무실·상가·건물매매`, template: `%s | ${site.name}` },
@@ -28,6 +29,10 @@ export default function RootLayout({ children }) {
           <b>{site.name}</b><br />개업공인중개사 {i.ceo} · 사업자등록번호 {i.bizNo} · 중개사무소 등록번호 {i.regNo}<br />
           {i.address} · Tel {site.phone} · Email {i.email}<br /><a href="/privacy">개인정보처리방침</a>
         </div></footer>
+        <div className="fab">
+          <a className="fk" href={KAKAO} target="_blank" rel="noopener noreferrer">카톡 상담</a>
+          <a className="fp" href={tel}>전화 상담</a>
+        </div>
       </body>
     </html>
   );

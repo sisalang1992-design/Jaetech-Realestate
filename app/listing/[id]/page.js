@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { db, COLS } from "../../../lib/db";
-import { CAT, dealOf, priceFull, thumb, wonU } from "../../../lib/fmt";
+import { CAT, dealOf, priceFull, thumb, wonU, KAKAO } from "../../../lib/fmt";
 import Gallery from "../../../components/Gallery";
 import Card from "../../../components/Card";
 import site from "../../../site.json";
@@ -50,7 +50,8 @@ export default async function Detail({ params }) {
             <G t="상세정보" rows={[["중개대상물 종류", v(l.property_type)], ["사용승인일", dt(l.approval_date)], ["입주가능일", v(l.move_in)], ["주차", park],
               ["욕실 수", cnt(l.bath_count)], ...(l.room_count != null ? [["방 수", cnt(l.room_count)]] : []), ["방향", l.entrance_dir ? l.entrance_dir + " (주출입구 기준)" : "-"]]} />
             {extra.length > 0 && <G t="추가정보" rows={extra} />}
-            <div className="acts"><a className="btn" href={tel}>전화 문의 {site.phone}</a><a className="btn line" href={`/${l.category}`}>목록으로</a></div>
+            <div className="acts"><a className="btn kbtn" href={KAKAO} target="_blank" rel="noopener noreferrer">카카오톡으로 문의</a><a className="btn" href={tel}>전화 문의 {site.phone}</a><a className="btn line" href={`/${l.category}`}>목록으로</a></div>
+            <p className="hint">카톡으로 문의하실 때 <b>매물번호 {l.id}번</b>을 알려주세요.</p>
           </div>
           <div className="box off"><b>{site.name}</b><br />개업공인중개사 {I.ceo} · 등록번호 {I.regNo}<br />{I.address}<br />Tel {site.phone} · {I.email}</div>
         </div>
