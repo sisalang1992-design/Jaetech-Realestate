@@ -1,5 +1,6 @@
 import site from "../site.json";
 import { KAKAO } from "../lib/fmt";
+import Analytics from "../components/Analytics";
 export const metadata = {
   metadataBase: new URL(site.siteUrl),
   title: { default: `${site.name} | 사무실·상가·건물매매`, template: `%s | ${site.name}` },
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/home.css" />
       </head>
       <body>
+        <Analytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
         <header className="hd"><div className="in">
           <a className="logo" href="/">{site.name}</a>

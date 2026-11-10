@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
 const G = ({ t, rows }) => <><h2 className="gt">{t}</h2><dl>{rows.flatMap(([k, x]) => [<dt key={k + "t"}>{k}</dt>, <dd key={k + "d"}>{x}</dd>])}</dl></>;
 export default async function Detail({ params }) {
   const l = await get(params.id); if (!l) notFound();
-  const { data: rel } = await db.from("listings").select(COLS).eq("is_active", true).eq("category", l.category).neq("id", l.id).order("created_at", { ascending: false }).limit(3);
+  const { data: rel } = await db.from("listings").select(COLS).eq("is_active", true).eq("category", l.category).neq("id", l.id).order("created_at", { ascending: false }).limit(4);
   const ph = l.photos || [], tel = "tel:" + site.phone.replace(/[^0-9+]/g, ""), I = site.info;
   const cnt = x => x === null || x === undefined ? "-" : x + "개";
   const park = /^\d+$/.test(l.parking || "") ? `${l.parking}대` : v(l.parking);
